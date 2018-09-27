@@ -24,19 +24,55 @@ class MemberController extends Controller
         return view('members.index', ['members' => Member::all(), 'newMember' => new Member]);
     }
 
-    public function create(CreateMemberRequest $req) {
-        // Validate the unicity of a member
-        
+    public function create(CreateMemberRequest $req) {        
         $member = new Member;
+        $this->requestToMember($req, $member);
+        $member->save();
+
+        return redirect()->route('member.home');
+    }
+
+    public function edit($id) {
+        $member = Member::find($id);
+
+        if(!isset($member)) {
+            return abort(404);
+        }
+
+        return view('members.edit', ['members' => Member::all(), 'memberToUpdate' => $member]);
+    }
+
+    public function update(CreateMemberRequest $req, $id) {
+        $member = Member::find($id);
+        
+        if(!isset($member)) {
+            return abort(404);
+        }
+
+        $this->requestToMember($req, $member);
+        $member->save();
+
+        return redirect()->route('member.home');
+    }
+
+    public function delete($id) {
+        $member = Member::find($id);
+
+        if(!isset($member)) {
+            return abort(404);
+        }
+        $member->delete();
+        return redirect()->route('member.home');
+    }
+
+    protected function requestToMember($req, $member) {
         $member->lastname = $req->lastname;
         $member->firstname = $req->firstname;
         $member->email = $req->email;
         $member->birthdate = Carbon::createFromFormat('d/m/Y', $req->birthdate);
         $member->gender = $req->gender;
-
-        $member->save();
-
-        return redirect()->route('member.home');
+        
+        return $member; 
     }
 
 }

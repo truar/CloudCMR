@@ -40,8 +40,20 @@ class MemberTest extends TestCase
      */
     public function testPostNewMember() {
         $member = factory(\App\Member::class)->make();
-        $response = $this->postRequest($member)
+        $response = $this->postNewMember($member)
                         ->assertStatus(302);
+        
+        $this->assertDatabaseHas('members', $member->toArray());
+    }
+
+    public function testPostNewMemberWithSpaces() {
+        $member = factory(\App\Member::class)->make();
+        $member->lastname = "Pinchon Carron de la carrier";
+        $member->firstname = "Jean-Paul";
+        $response = $this->postNewMember($member)
+                        ->assertStatus(302);
+        
+        $this->assertDatabaseHas('members', $member->toArray());
     }
 
     /**
@@ -50,24 +62,139 @@ class MemberTest extends TestCase
     public function testPostNewMemberWithErrorsDuplicate() {
         $member = factory(\App\Member::class)->make();
         
-        $this->postRequest($member)
+        $this->postNewMember($member)
             ->assertStatus(302);
 
-        $this->postRequest($member)
+        $this->assertDatabaseHas('members', $member->toArray());
+
+        $this->postNewMember($member)
             ->assertStatus(422);
-        
     }
 
-    protected function postRequest($member) {
+    /**
+     * Update a new member
+     */
+    public function testUpdateMember() {
+        $member = factory(\App\Member::class)->create();
+
+        $member->lastname="last";
+
+        $this->postUpdateMember($member)
+            ->assertStatus(302); 
+
+        $this->assertDatabaseHas('members', $member->toArray());
+    }
+
+    /**
+     * Errors when updating a new member
+     */
+    public function testUpdateMemberWithErrors() {
+        $member = factory(\App\Member::class)->create();
+
+        $member->lastname="";
+
+        $this->postUpdateMember($member)
+            ->assertStatus(422); 
+
+        $this->assertDatabaseMissing('members', $member->toArray());
+    }
+
+    /**
+     * No error when we update an existing member on field others than lastname, firstname and birthdate
+     */
+    public function testUpdateMemberWithNoDuplicateError() {
+        $member = factory(\App\Member::class)->create();
+
+        $member->email="toto@mail.com";
+
+        $this->postUpdateMember($member)
+            ->assertStatus(302); 
+
+        $this->assertDatabaseHas('members', $member->toArray());
+    }
+
+    public function testUpdateMemberNotExist() {
+        $member = factory(\App\Member::class)->make();
+        $this->postUpdateMember($member)
+            ->assertStatus(404); 
+        $this->assertDatabaseMissing('members', $member->toArray());
+    }
+
+    public function testGetEditMember() {
+        $member = factory(\App\Member::class)->create();
+        $this->getEditRequest($member->id)
+            ->assertStatus(200);
+    }
+
+    public function testGetEditMemberNotInteger() {
+        $this->getEditRequest('abc')
+            ->assertStatus(404);
+    }
+
+    public function testGetEditMemberNotExist() {
+        $this->getEditRequest(1)
+            ->assertStatus(404);
+    }
+
+    public function testDeleteMember() {
+        $member = factory(\App\Member::class)->create();
+        return $this->getDeleteRequest($member->id)
+            ->assertStatus(302);
+        
+        $this->assertDatabaseMissing('members', $member->toArray());
+    }
+
+    public function testDeleteMemberNotInteger() {
+        return $this->getDeleteRequest('abc')
+            ->assertStatus(404);
+   }
+
+    public function testDeleteMemberNotExists() {
+        return $this->getDeleteRequest(1)
+            ->assertStatus(404);
+    }
+
+    /**
+     * Post the member in the url 
+     */
+    protected function postRequest($url, $member) {
         $user = factory(User::class)->create();
         $birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
         return $this->actingAs($user)
-                    ->json('POST', '/members/create', [
+                    ->json('POST', $url, [
                         'lastname' => $member->lastname,
                         'firstname' => $member->firstname,
                         'birthdate' => $birthdate,
                         'email' => $member->email,
                         'gender' => $member->gender
                 ]);
+    }
+
+    protected function getRequest($url) {
+        $user = factory(User::class)->create();
+        return $this->actingAs($user)
+            ->get($url);
+    }
+
+    protected function getEditRequest($id) {
+        return $this->getRequest('/members/edit/' . $id);
+    }
+
+    protected function getDeleteRequest($id) {
+        return $this->getRequest('/members/delete/' . $id);
+    }
+
+    /**
+     * Post a new member
+     */
+    protected function postNewMember($member) {
+        return $this->postRequest('/members/create', $member);
+    }
+
+    /**
+     * Post to update a member
+     */
+    protected function postUpdateMember($member) {
+        return $this->postRequest('/members/update/' . $member->id, $member);
     }
 }

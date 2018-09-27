@@ -7,7 +7,7 @@ $factory->define(\App\Member::class, function (Faker $faker) {
         'lastname' => $faker->lastName,
         'firstname' => $faker->firstNameMale,
         'email' => $faker->freeEmail,
-        'gender' => 'Male',
+        'gender' => 'male',
         'birthdate' => $faker->date
     ];
 });

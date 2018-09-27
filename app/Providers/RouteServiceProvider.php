@@ -23,7 +23,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // when the route will see the pattern 'id', it will always and only allow for integer
+        Route::pattern('id', '[0-9]+');
 
         parent::boot();
     }

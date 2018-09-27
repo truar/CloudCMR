@@ -22,3 +22,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/members', 'MemberController@index')->name('member.home');
 Route::post('/members/create', 'MemberController@create')->name('member.create');
 
+Route::get('/members/edit/{id}', 'MemberController@edit')->name('member.edit');
+Route::post('/members/update/{id}', 'MemberController@update')->name('member.update');
+
+Route::get('/members/delete/{id}', 'MemberController@delete')->name('member.delete');
+

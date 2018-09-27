@@ -16,9 +16,9 @@ class CreateMemberRequest extends Request {
      */
     public function rules() {        
         return [
-            'lastname' => ['required', 'alpha'],
-            'firstname' => ['required', 'alpha'],
-            'gender' => ['required', Rule::in(['Male', 'Female'])],
+            'lastname' => ['required', 'string'],
+            'firstname' => ['required', 'string'],
+            'gender' => ['required', Rule::in(['male', 'female'])],
             'birthdate' => ['required', 'date_format:d/m/Y'],
             'email' => ['required', 'email']
         ];
@@ -41,7 +41,7 @@ class CreateMemberRequest extends Request {
                         return $query->where('lastname', $this->lastname)
                             ->where('firstname', $this->firstname)
                             ->whereDate('birthdate', Carbon::createFromFormat('d/m/Y', $this->birthdate));
-                    })], ['lastname.unique' => 'Le membre existe déjà en base'])->validate();
+                    })->ignore($this->id)], ['lastname.unique' => 'Le membre existe déjà en base'])->validate();
         });
     }
 
@@ -49,10 +49,9 @@ class CreateMemberRequest extends Request {
     public function messages() {
         return [
             'lastname.required' => 'Le nom est obligatoire',
-            'lastname.alpha' => 'Le nom doit être composé uniquement de lettres',
-            'lastname.unique' => '',
+            'lastname.string' => 'Le nom doit être composé uniquement de lettres',
             'firstname.required' => 'Le prénom est obligatoire',
-            'firstname.alpha' => 'Le prénom doit être composé uniquement de lettres',
+            'firstname.string' => 'Le prénom doit être composé uniquement de lettres',
             'gender.required' => 'Le genre est obligatoire',
             'gender.in' => 'Le genre doit Homme ou Femme uniquement',
             'birthdate.required' => 'La date de naissance est obligatoire',
