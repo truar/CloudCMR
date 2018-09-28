@@ -15,6 +15,9 @@ class MemberController extends Controller
     const MEMBERS_HOME = 'members.home';
     const MEMBERS_INDEX = 'members.index';
     const MEMBERS_EDIT = 'members.edit';
+    const MEMBERS = 'members';
+    const MEMBER = 'member';
+    const DATE_FORMAT = 'd/m/Y';
 
     /**
      * Create a new controller instance.
@@ -22,11 +25,11 @@ class MemberController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware($this->AUTH);
+        $this->middleware(self::AUTH);
     }
 
     public function index(Request $req) {
-        return view('members.index', ['members' => Member::all(), 'member' => new Member]);
+        return view(self::MEMBERS_INDEX, [self::MEMBERS => Member::all(), self::MEMBER => new Member]);
     }
 
     public function create(CreateMemberRequest $req) {        
@@ -39,7 +42,7 @@ class MemberController extends Controller
     }
 
     public function edit(Member $member) {
-        return view('members.edit', ['members' => Member::all(), 'member' => $member]);
+        return view(self::MEMBERS_EDIT, [self::MEMBERS => Member::all(), self::MEMBER => $member]);
     }
 
     public function update(CreateMemberRequest $req, Member $member) {
@@ -59,12 +62,12 @@ class MemberController extends Controller
         $member->lastname = $req->lastname;
         $member->firstname = $req->firstname;
         $member->email = $req->email;
-        $member->birthdate = Carbon::createFromFormat('d/m/Y', $req->birthdate);
+        $member->birthdate = Carbon::createFromFormat(self::DATE_FORMAT, $req->birthdate);
         $member->gender = $req->gender;
     }
 
     protected function redirectHome() {
-        return redirect()->route('members.home');
+        return redirect()->route(self::MEMBERS_HOME);
     }
 
 }
