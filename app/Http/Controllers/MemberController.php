@@ -11,13 +11,18 @@ use Carbon\Carbon;
 
 class MemberController extends Controller
 {
+    const AUTH = 'auth';
+    const MEMBERS_HOME = 'members.home';
+    const MEMBERS_INDEX = 'members.index';
+    const MEMBERS_EDIT = 'members.edit';
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth');
+        $this->middleware($this->AUTH);
     }
 
     public function index(Request $req) {
