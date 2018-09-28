@@ -13,6 +13,16 @@ class MemberTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp()
+    {
+        /**
+         * This disables the exception handling to display the stacktrace on the console
+         * the same way as it shown on the browser
+         */
+        parent::setUp();
+        //$this->withoutExceptionHandling();
+    }
+
     /**
      * Fail to access members without authorization
      */
@@ -69,6 +79,21 @@ class MemberTest extends TestCase
 
         $this->postNewMember($member)
             ->assertStatus(422);
+    }
+
+    public function testPostNewMemberErrorOnBirthdate() {
+        $member = factory(\App\Member::class)->make();
+        $member->birthdate = '1992-11-23';
+        $user = factory(User::class)->create();
+        $this->actingAs($user)
+                    ->json('POST', '/members/create', [
+                        'lastname' => $member->lastname,
+                        'firstname' => $member->firstname,
+                        'birthdate' => $member->birthdate,
+                        'email' => $member->email,
+                        'gender' => $member->gender
+                ])
+                ->assertStatus(422);
     }
 
     /**

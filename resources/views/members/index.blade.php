@@ -4,8 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-3">
-            @forelse ($members as $member)
-                <li>{{ $member->lastname }} {{ $member->firstname }}</li>
+            @forelse ($members as $m)
+                <li><a href="{{ route('members.edit', ['member' => $m]) }}">{{ $m->lastname }} {{ $m->firstname }}</a></li>
             @empty
                 <p>No members</p>
             @endforelse
@@ -20,7 +20,7 @@
                     </ul>
                 </div>
             @endif
-            {{ Form::model($newMember, ['route' => ['members.create']]) }}
+            {{ Form::model($member, ['route' => ['members.create']]) }}
                 <div class="form-group row">
                     {{ Form::label('lastname', 'Nom', ['class' => 'col-sm-1 col-form-label']) }}
                     <div class="col-sm-5">

@@ -23,10 +23,10 @@ Route::prefix('/members')->name('members.')->group(function() {
     Route::get('/', 'MemberController@index')->name('home');
     Route::post('/create', 'MemberController@create')->name('create');
     
-    Route::get('/edit/{id}', 'MemberController@edit')->name('edit');
-    Route::post('/update/{id}', 'MemberController@update')->name('update');
+    Route::get('/edit/{member}', 'MemberController@edit')->name('edit');
+    Route::post('/update/{member}', 'MemberController@update')->name('update');
     
-    Route::get('/delete/{id}', 'MemberController@delete')->name('delete');
+    Route::get('/delete/{member}', 'MemberController@delete')->name('delete');
 });
 
 

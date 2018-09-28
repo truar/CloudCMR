@@ -26,6 +26,7 @@ class CreateMemberRequest extends Request {
 
     /**
      * Adds a new Validator with a custom rule to validate the unicity of Lastname/Firstame/Birthdate
+     * We want to do the last validation for the unicity only if the validation process passed
      * Can't be done elsewhere because :
      * - if the birthdate is given with a wrong format, carbon generates error
      * - if we use bail on the birthdate field, it is not working because Eloquent will compare the String birhtdate from the 
@@ -34,15 +35,20 @@ class CreateMemberRequest extends Request {
      * TODO : Look for a prettier solution
      */
     public function withValidator($validator) {
-        $validator->after(function ($validator) {
-            Validator::make($this->all(),
-                ['lastname' => Rule::unique('members')->where(
-                    function ($query) {
-                        return $query->where('lastname', $this->lastname)
-                            ->where('firstname', $this->firstname)
-                            ->whereDate('birthdate', Carbon::createFromFormat('d/m/Y', $this->birthdate));
-                    })->ignore($this->id)], ['lastname.unique' => 'Le membre existe déjà en base'])->validate();
-        });
+        // We get the id from the member in the request, or we don't need an id
+        $id = isset($this->member) ? $this->member->id : null;
+
+        if($validator->passes()) {
+            $validator->after(function ($validator) use ($id) {
+                Validator::make($this->all(),
+                    ['lastname' => Rule::unique('members')->where(
+                        function ($query) {
+                            return $query->where('lastname', $this->lastname)
+                                ->where('firstname', $this->firstname)
+                                ->whereDate('birthdate', Carbon::createFromFormat('d/m/Y', $this->birthdate));
+                        })->ignore($id)], ['lastname.unique' => 'Le membre existe déjà en base'])->validate();
+            });
+        }
     }
 
     /**/
