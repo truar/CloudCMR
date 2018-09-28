@@ -19,11 +19,14 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/members', 'MemberController@index')->name('member.home');
-Route::post('/members/create', 'MemberController@create')->name('member.create');
+Route::prefix('/members')->name('members.')->group(function() {
+    Route::get('/', 'MemberController@index')->name('home');
+    Route::post('/create', 'MemberController@create')->name('create');
+    
+    Route::get('/edit/{id}', 'MemberController@edit')->name('edit');
+    Route::post('/update/{id}', 'MemberController@update')->name('update');
+    
+    Route::get('/delete/{id}', 'MemberController@delete')->name('delete');
+});
 
-Route::get('/members/edit/{id}', 'MemberController@edit')->name('member.edit');
-Route::post('/members/update/{id}', 'MemberController@update')->name('member.update');
-
-Route::get('/members/delete/{id}', 'MemberController@delete')->name('member.delete');
 

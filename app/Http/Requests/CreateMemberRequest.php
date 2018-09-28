@@ -53,7 +53,7 @@ class CreateMemberRequest extends Request {
             'firstname.required' => 'Le prénom est obligatoire',
             'firstname.string' => 'Le prénom doit être composé uniquement de lettres',
             'gender.required' => 'Le genre est obligatoire',
-            'gender.in' => 'Le genre doit Homme ou Femme uniquement',
+            'gender.in' => 'Le genre doit être Homme ou Femme uniquement',
             'birthdate.required' => 'La date de naissance est obligatoire',
             'birthdate.date_format' => 'Le format de la date de naissace est jj/mm/aaaa (ex: 25/05/1980 pour le 25 mai 1980)',
             'email.required' => 'L\'adresse email est obligatoire',

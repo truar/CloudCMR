@@ -20,7 +20,7 @@
                     </ul>
                 </div>
             @endif
-            {{ Form::model($memberToUpdate, ['route' => ['member.update', $memberToUpdate->id]]) }}
+            {{ Form::model($memberToUpdate, ['route' => ['members.update', $memberToUpdate->id]]) }}
                 <div class="form-group row">
                     {{ Form::label('lastname', 'Nom', ['class' => 'col-sm-1 col-form-label']) }}
                     <div class="col-sm-5">

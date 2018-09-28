@@ -29,7 +29,7 @@ class MemberController extends Controller
         $this->requestToMember($req, $member);
         $member->save();
 
-        return redirect()->route('member.home');
+        return redirect()->route('members.home');
     }
 
     public function edit($id) {
@@ -52,7 +52,7 @@ class MemberController extends Controller
         $this->requestToMember($req, $member);
         $member->save();
 
-        return redirect()->route('member.home');
+        return redirect()->route('members.home');
     }
 
     public function delete($id) {
@@ -62,7 +62,7 @@ class MemberController extends Controller
             return abort(404);
         }
         $member->delete();
-        return redirect()->route('member.home');
+        return redirect()->route('members.home');
     }
 
     protected function requestToMember($req, $member) {

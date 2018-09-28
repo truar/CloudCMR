@@ -20,7 +20,7 @@
                     </ul>
                 </div>
             @endif
-            {{ Form::model($newMember, ['route' => ['member.create']]) }}
+            {{ Form::model($newMember, ['route' => ['members.create']]) }}
                 <div class="form-group row">
                     {{ Form::label('lastname', 'Nom', ['class' => 'col-sm-1 col-form-label']) }}
                     <div class="col-sm-5">
@@ -34,7 +34,7 @@
                 <div class="form-group row">
                     {{ Form::label('gender', 'Genre', ['class' => 'col-sm-1 col-form-label']) }}
                     <div class="col-sm-5">
-                        {{ Form::select('gender', ['Male' => 'Homme', 'Female' => 'Femme'], null, ['class' => 'custom-select mr-sm-2']) }}
+                        {{ Form::select('gender', ['male' => 'Homme', 'female' => 'Femme'], null, ['class' => 'custom-select mr-sm-2']) }}
                     </div>
                     {{ Form::label('birthdate', 'Date Naiss', ['class' => 'col-sm-1 col-form-label']) }}
                     <div class="col-sm-5">
