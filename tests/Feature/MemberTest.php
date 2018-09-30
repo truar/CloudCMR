@@ -50,20 +50,26 @@ class MemberTest extends TestCase
      */
     public function testPostNewMember() {
         $member = factory(\App\Member::class)->make();
-        $response = $this->postNewMember($member)
+        $phones = factory(\App\Phone::class, 10)->make();
+        $adress = factory(\App\Adress::class)->make();
+
+        $response = $this->postNewMember($member, $phones)
                         ->assertStatus(302);
         
-        $this->assertDatabaseHas('members', $member->toArray());
+        $this->assertDatabaseHas('members', $member->attributesToArray());
+        foreach($phones as $phone) {
+            $this->assertDatabaseHas('phones', $phone->attributesToArray());
+        }
     }
 
-    public function testPostNewMemberWithSpaces() {
+    public function testPostNewMemberWithSpacesAndDash() {
         $member = factory(\App\Member::class)->make();
         $member->lastname = "Pinchon Carron de la carrier";
         $member->firstname = "Jean-Paul";
         $response = $this->postNewMember($member)
                         ->assertStatus(302);
         
-        $this->assertDatabaseHas('members', $member->toArray());
+        $this->assertDatabaseHas('members', $member->attributesToArray());
     }
 
     /**
@@ -75,7 +81,7 @@ class MemberTest extends TestCase
         $this->postNewMember($member)
             ->assertStatus(302);
 
-        $this->assertDatabaseHas('members', $member->toArray());
+        $this->assertDatabaseHas('members', $member->attributesToArray());
 
         $this->postNewMember($member)
             ->assertStatus(422);
@@ -101,13 +107,18 @@ class MemberTest extends TestCase
      */
     public function testUpdateMember() {
         $member = factory(\App\Member::class)->create();
+        $phone = factory(\App\Phone::class)->make();
+        $member->phones()->save($phone);
+        
+        $phone->number = '1-111-111-111';
+        $member->lastname = "last";
+        $member->phones[0] = $phone;
 
-        $member->lastname="last";
-
-        $this->postUpdateMember($member)
+        $this->postUpdateMember($member, [$phone])
             ->assertStatus(302); 
 
-        $this->assertDatabaseHas('members', $member->toArray());
+        $this->assertDatabaseHas('members', $member->attributesToArray());
+        $this->assertDatabaseHas('phones', $phone->attributesToArray());
     }
 
     /**
@@ -121,7 +132,7 @@ class MemberTest extends TestCase
         $this->postUpdateMember($member)
             ->assertStatus(422); 
 
-        $this->assertDatabaseMissing('members', $member->toArray());
+        $this->assertDatabaseMissing('members', $member->attributesToArray());
     }
 
     /**
@@ -135,14 +146,14 @@ class MemberTest extends TestCase
         $this->postUpdateMember($member)
             ->assertStatus(302); 
 
-        $this->assertDatabaseHas('members', $member->toArray());
+        $this->assertDatabaseHas('members', $member->attributesToArray());
     }
 
     public function testUpdateMemberNotExist() {
         $member = factory(\App\Member::class)->make();
         $this->postUpdateMember($member)
             ->assertStatus(404); 
-        $this->assertDatabaseMissing('members', $member->toArray());
+        $this->assertDatabaseMissing('members', $member->attributesToArray());
     }
 
     public function testGetEditMember() {
@@ -163,36 +174,49 @@ class MemberTest extends TestCase
 
     public function testDeleteMember() {
         $member = factory(\App\Member::class)->create();
-        return $this->getDeleteRequest($member->id)
+        $phone = factory(\App\Phone::class)->make();
+        $member->phones()->save($phone);
+        
+        $this->getDeleteRequest($member->id)
             ->assertStatus(302);
         
-        $this->assertDatabaseMissing('members', $member->toArray());
+        $this->assertDatabaseMissing('members', $member->attributesToArray());
+        $this->assertDatabaseMissing('phones', $phone->attributesToArray());
     }
 
     public function testDeleteMemberNotInteger() {
-        return $this->getDeleteRequest('abc')
+        $this->getDeleteRequest('abc')
             ->assertStatus(404);
    }
 
     public function testDeleteMemberNotExists() {
-        return $this->getDeleteRequest(1)
+        $this->getDeleteRequest(1)
             ->assertStatus(404);
     }
 
     /**
      * Post the member in the url 
      */
-    protected function postRequest($url, $member) {
+    protected function postRequest($url, $member, $phones = null) {
         $user = factory(User::class)->create();
         $birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
+        $array = [
+            'lastname' => $member->lastname,
+            'firstname' => $member->firstname,
+            'birthdate' => $birthdate,
+            'email' => $member->email,
+            'gender' => $member->gender
+        ];
+
+        if(isset($phones)) {
+            $index = 0;
+            foreach($phones as $phone) {
+                $array['phones'][$index++] = $phone->number;
+            }
+        }
+
         return $this->actingAs($user)
-                    ->json('POST', $url, [
-                        'lastname' => $member->lastname,
-                        'firstname' => $member->firstname,
-                        'birthdate' => $birthdate,
-                        'email' => $member->email,
-                        'gender' => $member->gender
-                ]);
+                    ->json('POST', $url, $array);
     }
 
     protected function getRequest($url) {
@@ -212,14 +236,14 @@ class MemberTest extends TestCase
     /**
      * Post a new member
      */
-    protected function postNewMember($member) {
-        return $this->postRequest('/members/create', $member);
+    protected function postNewMember($member, $phones = null) {
+        return $this->postRequest('/members/create', $member, $phones);
     }
 
     /**
      * Post to update a member
      */
-    protected function postUpdateMember($member) {
-        return $this->postRequest('/members/update/' . $member->id, $member);
+    protected function postUpdateMember($member, $phones = null) {
+        return $this->postRequest('/members/update/' . $member->id, $member, $phones);
     }
 }

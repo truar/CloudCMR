@@ -8,6 +8,7 @@ use Validator;
 use Illuminate\Validation\Rule;
 use App\Member;
 use Carbon\Carbon;
+use App\Phone;
 
 class MemberController extends Controller
 {
@@ -38,6 +39,12 @@ class MemberController extends Controller
         $this->requestToMember($req, $member);
         $member->save();
 
+        if(isset($member->phones[0])) {
+            foreach($member->phones as $phone) {
+                $member->phones()->save($phone);
+            }
+        }
+
         return $this->redirectHome();
     }
 
@@ -49,6 +56,12 @@ class MemberController extends Controller
 
         $this->requestToMember($req, $member);
         $member->save();
+
+        if(isset($member->phones[0])) {
+            foreach($member->phones as $phone) {
+                $member->phones()->save($phone);
+            }
+        }
 
         return $this->redirectHome();
     }
@@ -64,6 +77,16 @@ class MemberController extends Controller
         $member->email = $req->email;
         $member->birthdate = Carbon::createFromFormat(self::DATE_FORMAT, $req->birthdate);
         $member->gender = $req->gender;
+
+        if(isset($req->phones)) {
+            $index = 0;
+            foreach($req->phones as $phone) {
+                if(!isset($member->phones[$index])) {
+                    $member->phones[$index] = new Phone;
+                }
+                $member->phones[$index++]->number = $phone;
+            }
+        }
     }
 
     protected function redirectHome() {

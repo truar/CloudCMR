@@ -13,4 +13,11 @@ class Member extends Model
      */
     protected $table = 'members';
 
+    /**
+     * Get the phones associated to the member
+     */
+    public function phones() {
+        return $this->hasMany('App\Phone');
+    }
+
 }
