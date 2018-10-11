@@ -24,4 +24,27 @@ class Member extends Model
         return $this->hasMany('App\Phone');
     }
 
+    /**
+     * Save the phones into the DB.
+     */
+    public function savePhones() {
+        if(isset($this->phones[0])) {
+            foreach($this->phones as $phone) {
+                $this->phones()->save($phone);
+            }
+        }
+    }
+
+    /**
+     * Save the addresses into the DB
+     */
+    public function saveAddresses($addresses) {
+        if(isset($addresses)) {
+            // Loop to save the addresses
+            foreach($addresses as $address) {
+                $this->addAddress($address);
+            }
+        }
+    }
+
 }

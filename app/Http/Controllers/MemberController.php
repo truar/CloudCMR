@@ -39,19 +39,8 @@ class MemberController extends Controller
         $this->requestToMember($req, $member);
 
         $member->save();
-        
-        if(isset($req->addresses)) {
-            // Loop to save the addresses
-            foreach($req->addresses as $address) {
-                $member->addAddress($address);
-            }
-        }
-
-        if(isset($member->phones[0])) {
-            foreach($member->phones as $phone) {
-                $member->phones()->save($phone);
-            }
-        }
+        $member->savePhones();
+        $member->saveAddresses($req->addresses);
 
         return $this->redirectHome();
     }
@@ -63,21 +52,11 @@ class MemberController extends Controller
     public function update(CreateMemberRequest $req, Member $member) {
 
         $this->requestToMember($req, $member);
+
         $member->save();
-
-        if(isset($member->phones[0])) {
-            foreach($member->phones as $phone) {
-                $member->phones()->save($phone);
-            }
-        }
-
+        $member->savePhones();
         $member->flushAddresses();
-        if(isset($req->addresses)) {
-            // Loop to save the addresses
-            foreach($req->addresses as $address) {
-                $member->addAddress($address);
-            }
-        }
+        $member->saveAddresses($req->addresses);
 
         return $this->redirectHome();
     }
