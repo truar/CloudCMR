@@ -93,6 +93,7 @@ class MemberController extends Controller
         $member->email = $req->email;
         $member->birthdate = Carbon::createFromFormat(self::DATE_FORMAT, $req->birthdate);
         $member->gender = $req->gender;
+        $member->uscaNumber = $req->uscaNumber;
 
         if(isset($req->phones)) {
             $index = 0;

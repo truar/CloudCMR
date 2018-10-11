@@ -9,7 +9,7 @@ $factory->define(\App\Member::class, function (Faker $faker) {
         'email' => $faker->freeEmail,
         'gender' => 'male',
         'birthdate' => $faker->date,
-        'uscaNumber' => $faker->randomNumber(10)
+        'uscaNumber' => $faker->randomNumber()
     ];
 });
 

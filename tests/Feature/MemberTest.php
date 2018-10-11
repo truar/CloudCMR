@@ -64,9 +64,9 @@ class MemberTest extends TestCase
         }
     }
 
-    public function test_it_can_post_a_new_member_with_dash_and_spaces() {
+    public function test_it_can_post_a_new_member_with_dash_and_spaces_without_usca() {
         $member = factory(\App\Member::class)->states('space-and-dash')->make();
-
+        unset($member->uscaNumber);
         $response = $this->postNewMember($member)
                         ->assertStatus(302);
         
@@ -234,7 +234,7 @@ class MemberTest extends TestCase
         $this->assertDatabaseHas('members', $member->attributesToArray());
         $this->assertDatabaseHas('addresses', $address);
     }
-
+    
     /**
      * Post the member in the url 
      */

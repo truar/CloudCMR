@@ -21,6 +21,7 @@ class CreateMembersTable extends Migration
             $table->string('email');
             $table->enum('gender', ['male', 'female']);
             $table->date('birthdate');
+            $table->string('uscaNumber')->nullable();
             $table->unique(['lastname', 'firstname', 'birthdate'], 'unicity_member');
         });
     }
