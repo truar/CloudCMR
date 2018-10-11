@@ -8,7 +8,8 @@ $factory->define(\App\Member::class, function (Faker $faker) {
         'firstname' => $faker->firstNameMale,
         'email' => $faker->freeEmail,
         'gender' => 'male',
-        'birthdate' => $faker->date
+        'birthdate' => $faker->date,
+        'uscaNumber' => $faker->randomNumber(10)
     ];
 });
 
