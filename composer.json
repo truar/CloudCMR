@@ -17,6 +17,7 @@
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "5.7.*",
+        "lecturize/laravel-addresses": "^0.1.1",
         "nesbot/carbon": "^1.33"
     },
     "require-dev": {

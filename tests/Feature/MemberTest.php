@@ -7,7 +7,10 @@ use Tests\TestCase;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+
+use Webpatser\Countries\Countries;
 
 class MemberTest extends TestCase
 {
@@ -184,10 +187,58 @@ class MemberTest extends TestCase
             ->assertStatus(404);
     }
 
+    public function test_it_can_create_a_member_with_an_address() {
+        $this->withoutExceptionHandling();
+        // First, we need to seed the db for the country list
+        $this->artisan("db:seed");
+
+        $member = factory(\App\Member::class)->make();
+        $addresses = [[
+            'street'     => '1 rue du lycée',
+            'city'       => 'Rumilly',
+            'post_code'  => '74150',
+            'country'    => 'FRA', // ISO-3166-2 or ISO-3166-3 country code
+            'is_primary' => true, // optional flag
+        ],  ['street'     => '10 rue antoine gantin',
+            'city'       => 'Annecy',
+            'post_code'  => '74000',
+            'country'    => 'FRA', // ISO-3166-2 or ISO-3166-3 country code
+            'is_billing' => true, // optional flag
+        ]];
+        
+        $response = $this->postNewMember($member, null, true, $addresses)
+                        ->assertStatus(302);
+
+        unset($addresses[0]['country']);
+        unset($addresses[1]['country']);
+
+        $this->assertDatabaseHas('addresses', $addresses[0]);
+        $this->assertDatabaseHas('addresses', $addresses[1]);
+    }
+
+    public function test_it_can_update_a_member_with_a_new_address() {
+        // First, we need to seed the db for the country list
+        $this->artisan("db:seed");
+
+        $member = factory(\App\Member::class)->create();
+        $address = [
+            'street'     => '1 rue du lycée',
+            'city'       => 'Rumilly',
+            'post_code'  => '74150',
+            'country'    => 'FRA', // ISO-3166-2 or ISO-3166-3 country code
+            'is_primary' => true, // optional flag
+        ];
+        $response = $this->postUpdateMember($member, null, true, [$address])
+                        ->assertStatus(302);
+        unset($address['country']);
+        $this->assertDatabaseHas('members', $member->attributesToArray());
+        $this->assertDatabaseHas('addresses', $address);
+    }
+
     /**
      * Post the member in the url 
      */
-    protected function postRequest($url, $member, $phones = null, $reformatBirthDate = true) {
+    protected function postRequest($url, $member, $phones = null, $reformatBirthDate = true, $addresses = null) {
         $user = factory(User::class)->create();
         if($reformatBirthDate) {
             $birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
@@ -209,6 +260,13 @@ class MemberTest extends TestCase
             }
         }
 
+        if(isset($addresses)) {
+            $index = 0;
+            foreach($addresses as $address) {
+                $array['addresses'][$index++] = $address;
+            }
+        }
+        
         return $this->actingAs($user)
                     ->json('POST', $url, $array);
     }
@@ -230,14 +288,14 @@ class MemberTest extends TestCase
     /**
      * Post a new member
      */
-    protected function postNewMember($member, $phones = null, $reformatBirthDate = true) {
-        return $this->postRequest('/members/create', $member, $phones, $reformatBirthDate);
+    protected function postNewMember($member, $phones = null, $reformatBirthDate = true, $addresses = null) {
+        return $this->postRequest('/members/create', $member, $phones, $reformatBirthDate, $addresses);
     }
 
     /**
      * Post to update a member
      */
-    protected function postUpdateMember($member, $phones = null, $reformatBirthDate = true) {
-        return $this->postRequest('/members/update/' . $member->id, $member, $phones, $reformatBirthDate);
+    protected function postUpdateMember($member, $phones = null, $reformatBirthDate = true, $addresses = null) {
+        return $this->postRequest('/members/update/' . $member->id, $member, $phones, $reformatBirthDate, $addresses);
     }
 }
