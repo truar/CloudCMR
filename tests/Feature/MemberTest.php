@@ -26,7 +26,7 @@ class MemberTest extends TestCase
     /**
      * Fail to access members without authorization
      */
-    public function testGetMembersNoAuth() {
+    public function test_it_cant_access_without_authorization() {
         $response = $this->get('/members');
 
         $response->assertStatus(302);
@@ -36,7 +36,7 @@ class MemberTest extends TestCase
      *
      * @return void
      */
-    public function testGetMembers()
+    public function test_it_can_get_the_members()
     {
         $user = factory(User::class)->create();
         $response = $this->actingAs($user)
@@ -48,10 +48,9 @@ class MemberTest extends TestCase
     /**
      * Post a new member with no errors 
      */
-    public function testPostNewMember() {
+    public function test_it_can_post_a_new_member() {
         $member = factory(\App\Member::class)->make();
         $phones = factory(\App\Phone::class, 10)->make();
-        $adress = factory(\App\Adress::class)->make();
 
         $response = $this->postNewMember($member, $phones)
                         ->assertStatus(302);
@@ -62,10 +61,9 @@ class MemberTest extends TestCase
         }
     }
 
-    public function testPostNewMemberWithSpacesAndDash() {
-        $member = factory(\App\Member::class)->make();
-        $member->lastname = "Pinchon Carron de la carrier";
-        $member->firstname = "Jean-Paul";
+    public function test_it_can_post_a_new_member_with_dash_and_spaces() {
+        $member = factory(\App\Member::class)->states('space-and-dash')->make();
+
         $response = $this->postNewMember($member)
                         ->assertStatus(302);
         
@@ -75,7 +73,7 @@ class MemberTest extends TestCase
     /**
      * Post a new member with errors on each field
      */
-    public function testPostNewMemberWithErrorsDuplicate() {
+    public function test_it_cant_post_an_existing_member() {
         $member = factory(\App\Member::class)->make();
         
         $this->postNewMember($member)
@@ -87,25 +85,17 @@ class MemberTest extends TestCase
             ->assertStatus(422);
     }
 
-    public function testPostNewMemberErrorOnBirthdate() {
+    public function test_it_cant_post_a_member_with_a_wrong_birthdate() {
         $member = factory(\App\Member::class)->make();
-        $member->birthdate = '1992-11-23';
-        $user = factory(User::class)->create();
-        $this->actingAs($user)
-                    ->json('POST', '/members/create', [
-                        'lastname' => $member->lastname,
-                        'firstname' => $member->firstname,
-                        'birthdate' => $member->birthdate,
-                        'email' => $member->email,
-                        'gender' => $member->gender
-                ])
-                ->assertStatus(422);
+
+        $this->postNewMember($member, null, false)
+            ->assertStatus(422);
     }
 
     /**
      * Update a new member
      */
-    public function testUpdateMember() {
+    public function test_it_can_update_a_member() {
         $member = factory(\App\Member::class)->create();
         $phone = factory(\App\Phone::class)->make();
         $member->phones()->save($phone);
@@ -124,7 +114,7 @@ class MemberTest extends TestCase
     /**
      * Errors when updating a new member
      */
-    public function testUpdateMemberWithErrors() {
+    public function test_it_cant_update_a_member_with_en_empty_lastname() {
         $member = factory(\App\Member::class)->create();
 
         $member->lastname="";
@@ -138,7 +128,7 @@ class MemberTest extends TestCase
     /**
      * No error when we update an existing member on field others than lastname, firstname and birthdate
      */
-    public function testUpdateMemberWithNoDuplicateError() {
+    public function test_it_can_update_a_member_without_changing_the_unicity() {
         $member = factory(\App\Member::class)->create();
 
         $member->email="toto@mail.com";
@@ -149,30 +139,30 @@ class MemberTest extends TestCase
         $this->assertDatabaseHas('members', $member->attributesToArray());
     }
 
-    public function testUpdateMemberNotExist() {
+    public function test_it_cant_update_a_member_that_not_exist() {
         $member = factory(\App\Member::class)->make();
         $this->postUpdateMember($member)
             ->assertStatus(404); 
         $this->assertDatabaseMissing('members', $member->attributesToArray());
     }
 
-    public function testGetEditMember() {
+    public function test_it_can_get_the_edtest_it_member_view() {
         $member = factory(\App\Member::class)->create();
         $this->getEditRequest($member->id)
             ->assertStatus(200);
     }
 
-    public function testGetEditMemberNotInteger() {
+    public function test_it_cant_get_the_edtest_it_member_view_with_a_wrong_id() {
         $this->getEditRequest('abc')
             ->assertStatus(404);
     }
 
-    public function testGetEditMemberNotExist() {
+    public function test_it_cant_get_the_edtest_it_member_view_with_not_existing_id() {
         $this->getEditRequest(1)
             ->assertStatus(404);
     }
 
-    public function testDeleteMember() {
+    public function test_it_can_delete_a_member() {
         $member = factory(\App\Member::class)->create();
         $phone = factory(\App\Phone::class)->make();
         $member->phones()->save($phone);
@@ -184,12 +174,12 @@ class MemberTest extends TestCase
         $this->assertDatabaseMissing('phones', $phone->attributesToArray());
     }
 
-    public function testDeleteMemberNotInteger() {
+    public function test_it_cant_delete_a_member_with_a_wrong_id() {
         $this->getDeleteRequest('abc')
             ->assertStatus(404);
    }
 
-    public function testDeleteMemberNotExists() {
+    public function test_it_cant_get_the_delete_member_view_with_not_existing_id() {
         $this->getDeleteRequest(1)
             ->assertStatus(404);
     }
@@ -197,9 +187,13 @@ class MemberTest extends TestCase
     /**
      * Post the member in the url 
      */
-    protected function postRequest($url, $member, $phones = null) {
+    protected function postRequest($url, $member, $phones = null, $reformatBirthDate = true) {
         $user = factory(User::class)->create();
-        $birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
+        if($reformatBirthDate) {
+            $birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
+        } else {
+            $birthdate = $member->birthdate;
+        }
         $array = [
             'lastname' => $member->lastname,
             'firstname' => $member->firstname,
@@ -236,14 +230,14 @@ class MemberTest extends TestCase
     /**
      * Post a new member
      */
-    protected function postNewMember($member, $phones = null) {
-        return $this->postRequest('/members/create', $member, $phones);
+    protected function postNewMember($member, $phones = null, $reformatBirthDate = true) {
+        return $this->postRequest('/members/create', $member, $phones, $reformatBirthDate);
     }
 
     /**
      * Post to update a member
      */
-    protected function postUpdateMember($member, $phones = null) {
-        return $this->postRequest('/members/update/' . $member->id, $member, $phones);
+    protected function postUpdateMember($member, $phones = null, $reformatBirthDate = true) {
+        return $this->postRequest('/members/update/' . $member->id, $member, $phones, $reformatBirthDate);
     }
 }

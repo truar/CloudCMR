@@ -11,3 +11,8 @@ $factory->define(\App\Member::class, function (Faker $faker) {
         'birthdate' => $faker->date
     ];
 });
+
+$factory->state(App\Member::class, 'space-and-dash', [
+    'lastname' => '"Pinchon Carron de la carrier"',
+    'firstname' => 'Jean-Paul'
+]);
