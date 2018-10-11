@@ -100,7 +100,7 @@ class MemberController extends Controller
                 if(!isset($member->phones[$index])) {
                     $member->phones[$index] = new Phone;
                 }
-                $member->phones[$index++]->number = $phone;
+                $member->phones[$index++]->number = $phone['number'];
             }
         }
     }

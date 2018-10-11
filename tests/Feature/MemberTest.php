@@ -240,33 +240,20 @@ class MemberTest extends TestCase
      */
     protected function postRequest($url, $member, $phones = null, $reformatBirthDate = true, $addresses = null) {
         $user = factory(User::class)->create();
-        if($reformatBirthDate) {
-            $birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
-        } else {
-            $birthdate = $member->birthdate;
-        }
-        $array = [
-            'lastname' => $member->lastname,
-            'firstname' => $member->firstname,
-            'birthdate' => $birthdate,
-            'email' => $member->email,
-            'gender' => $member->gender
-        ];
-
+        $array = $member->toArray();
+        
         if(isset($phones)) {
-            $index = 0;
-            foreach($phones as $phone) {
-                $array['phones'][$index++] = $phone->number;
-            }
+            $array['phones'] = (is_array($phones)) ? $phones : $phones->toArray();
         }
 
         if(isset($addresses)) {
-            $index = 0;
-            foreach($addresses as $address) {
-                $array['addresses'][$index++] = $address;
-            }
+            $array['addresses'] = $addresses;
         }
-        
+
+        if($reformatBirthDate) {
+            $array['birthdate'] = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
+        }
+
         return $this->actingAs($user)
                     ->json('POST', $url, $array);
     }
