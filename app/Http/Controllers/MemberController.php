@@ -10,8 +10,8 @@ use App\Member;
 use Carbon\Carbon;
 use App\Phone;
 
-class MemberController extends Controller
-{
+class MemberController extends Controller {
+    
     const AUTH = 'auth';
     const MEMBERS_HOME = 'members.home';
     const MEMBERS_INDEX = 'members.index';
@@ -55,6 +55,7 @@ class MemberController extends Controller
 
         $member->save();
         $member->savePhones();
+        // Delete all the addresses before saving the new ones
         $member->flushAddresses();
         $member->saveAddresses($req->addresses);
 
@@ -62,6 +63,9 @@ class MemberController extends Controller
     }
 
     public function delete(Member $member) {
+        // Delete the phones first.
+        // We don't want to rel on delete cascade as this can be different regarding the DB
+        $member->phones()->delete();
         $member->delete();
         return $this->redirectHome();
     }

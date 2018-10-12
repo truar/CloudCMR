@@ -23,6 +23,7 @@ class MemberTest extends TestCase
          * the same way as it shown on the browser
          */
         parent::setUp();
+        $this->dbType = env('DB_CONNECTION', 'sqlite');
         //$this->withoutExceptionHandling();
     }
 
@@ -83,6 +84,10 @@ class MemberTest extends TestCase
             ->assertStatus(302);
 
         $this->assertDatabaseHas('members', $member->attributesToArray());
+
+        if($this->isSqlite()) {
+            $member->birthdate = Carbon::createFromFormat('Y-m-d h:i:s', $member->birthdate)->format('Y-m-d');
+        }
 
         $this->postNewMember($member)
             ->assertStatus(422);
@@ -240,8 +245,15 @@ class MemberTest extends TestCase
      */
     protected function postRequest($url, $member, $phones = null, $reformatBirthDate = true, $addresses = null) {
         $user = factory(User::class)->create();
-        $array = $member->toArray();
         
+        // We need to update the member birthdare into a datetime as sqlite don't deal with date
+        if($this->isSqlite()) {
+            $member->birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('Y-m-d h:i:s');
+        }
+
+        $array = $member->toArray();
+
+
         if(isset($phones)) {
             $array['phones'] = (is_array($phones)) ? $phones : $phones->toArray();
         }
@@ -251,7 +263,8 @@ class MemberTest extends TestCase
         }
 
         if($reformatBirthDate) {
-            $array['birthdate'] = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
+            $format = ($this->isSqlite()) ? 'Y-m-d h:i:s' : 'Y-m-d';
+            $array['birthdate'] = Carbon::createFromFormat($format, $member->birthdate)->format('d/m/Y');
         }
 
         return $this->actingAs($user)
@@ -284,5 +297,9 @@ class MemberTest extends TestCase
      */
     protected function postUpdateMember($member, $phones = null, $reformatBirthDate = true, $addresses = null) {
         return $this->postRequest('/members/update/' . $member->id, $member, $phones, $reformatBirthDate, $addresses);
+    }
+
+    private function isSqlite() {
+        return $this->dbType == "sqlite";
     }
 }
