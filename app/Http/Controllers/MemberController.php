@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateMemberRequest;
-use Validator;
-use Illuminate\Validation\Rule;
 use App\Member;
 use Carbon\Carbon;
 use App\Phone;

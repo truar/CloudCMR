@@ -17,6 +17,11 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/events', 'EventController@index')->name('events.home');
+Route::post('/events/create', 'EventController@create')->name('events.create');
+Route::post('/events/update/{event}', 'EventController@update')->name('events.update');
+Route::get('/events/delete/{event}', 'EventController@delete')->name('events.delete');
+
 Route::prefix('/members')->name('members.')->group(function() {
     Route::get('/', 'MemberController@index')->name('home');
     Route::post('/create', 'MemberController@create')->name('create');

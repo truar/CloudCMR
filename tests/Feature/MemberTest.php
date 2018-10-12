@@ -10,8 +10,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 
-use Webpatser\Countries\Countries;
-
 class MemberTest extends TestCase
 {
     use RefreshDatabase;
