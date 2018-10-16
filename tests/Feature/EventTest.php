@@ -23,6 +23,7 @@ class EventTest extends TestCase
         $this->requester = new Requester($this);
         $this->user = factory(User::class)->create();
         $this->event = factory(\App\Event::class)->make();
+        $this->transportation = factory(\App\Transportation::class)->make();
         //$this->withoutExceptionHandling();
     }
     
@@ -31,7 +32,6 @@ class EventTest extends TestCase
      */
     public function test_it_cant_access_without_authorization() {
         $response = $this->get('/events');
-
         $response->assertStatus(302);
     }
 
@@ -41,11 +41,8 @@ class EventTest extends TestCase
      * @return void
      */
     public function test_it_can_create_an_event() {
-
         $response = $this->requester->postRequest($this->user, '/events/create', $this->event->toArray());
-        
         $this->assertOkAndHas($response, $this->event);
-
     }
 
     public function test_it_cant_create_an_event_without_name() {
@@ -109,10 +106,34 @@ class EventTest extends TestCase
         $response = $this->requester->getRequest($this->user, '/events/delete/' . $this->event->id, $this->event->toArray());
         $this->assertOkAndMissing($response, $this->event);
     }
-
+    
     public function test_it_cant_delete_a_not_existing_event() {
         $response = $this->requester->getRequest($this->user, '/events/delete/1', $this->event->toArray());
         $response->assertStatus(404);
+    }
+
+    public function test_it_can_create_an_event_with_transportation() {
+        $this->event->transportations = [$this->transportation->toArray()];
+        $response = $this->requester->postRequest($this->user, '/events/create', $this->event->toArray());
+        
+        unset($this->event->transportations);
+        $this->assertOkAndHas($response, $this->event);
+        $this->assertDatabaseHas('transportations', $this->transportation->toArray());
+    }
+
+    public function test_it_can_update_an_event_transportations() {
+        $this->event->save();
+        $this->event->transportations = [$this->transportation];
+        $this->event->saveTransportations();
+
+        $this->transportation->departureDate = '1992-11-21 10:11:01';
+        $this->event->transportations = [$this->transportation->toArray()];
+
+        $response = $this->requester->postRequest($this->user, '/events/update/' . $this->event->id, $this->event->toArray());
+        
+        unset($this->event->transportations);
+        $this->assertOkAndHas($response, $this->event);
+        $this->assertDatabaseHas('transportations', $this->transportation->toArray()); 
     }
 
     private function assertErrorFormAndMissing($response, $event) {

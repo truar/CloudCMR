@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateEventRequest;
 use App\Event;
+use App\Transportation;
 
 class EventController extends Controller
 {
@@ -26,14 +27,14 @@ class EventController extends Controller
         $this->requestToEvent($req, $event);
 
         $event->save();
-
+        $event->saveTransportations();
         return view('welcome');
     }
 
     public function update(CreateEventRequest $req, Event $event) {
         $this->requestToEvent($req, $event);
         $event->save();
-
+        $event->saveTransportations();
         return view('welcome');
     }
 
@@ -47,5 +48,19 @@ class EventController extends Controller
         $event->startDate = $req->startDate;
         $event->price = $req->price;
         $event->type = $req->type;
+
+        if(isset($req->transportations)) {
+            $index = 0;
+            foreach($req->transportations as $transportation) {
+                if(!isset($event->transportations[$index])) {
+                    $event->transportations[$index] = new Transportation;
+                }
+                $event->transportations[$index]->type = $transportation['type'];
+                $event->transportations[$index]->departureDate = $transportation['departureDate'];
+                $event->transportations[$index]->arrivalDate = $transportation['arrivalDate'];
+                $event->transportations[$index]->departureLocation = $transportation['departureLocation'];
+                $event->transportations[$index++]->arrivalLocation = $transportation['arrivalLocation'];
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ class CreateEventRequest extends Request
     public function rules() {
         return [
             'name' => ['required', 'string'],
-            'startDate' => ['required', 'date_format:Y-m-d h:i:s'],
+            'startDate' => ['required', 'date_format:Y-m-d H:i:s'],
             'type' => ['required', Rule::in(['SORTIE', 'SOIREE'])],
             'price' => ['required', 'numeric', 'min:0']
         ];
