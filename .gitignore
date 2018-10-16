@@ -14,3 +14,4 @@ yarn-error.log
 cloud_cmr_test
 .phpunit.result.cache
 .DS_Store
+laradock

@@ -84,7 +84,7 @@ class MemberTest extends TestCase
         $this->assertDatabaseHas('members', $member->attributesToArray());
 
         if($this->isSqlite()) {
-            $member->birthdate = Carbon::createFromFormat('Y-m-d h:i:s', $member->birthdate)->format('Y-m-d');
+            $member->birthdate = Carbon::createFromFormat('Y-m-d H:i:s', $member->birthdate)->format('Y-m-d');
         }
 
         $this->postNewMember($member)
@@ -246,7 +246,7 @@ class MemberTest extends TestCase
         
         // We need to update the member birthdare into a datetime as sqlite don't deal with date
         if($this->isSqlite()) {
-            $member->birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('Y-m-d h:i:s');
+            $member->birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('Y-m-d H:i:s');
         }
 
         $array = $member->toArray();
@@ -261,7 +261,7 @@ class MemberTest extends TestCase
         }
 
         if($reformatBirthDate) {
-            $format = ($this->isSqlite()) ? 'Y-m-d h:i:s' : 'Y-m-d';
+            $format = ($this->isSqlite()) ? 'Y-m-d H:i:s' : 'Y-m-d';
             $array['birthdate'] = Carbon::createFromFormat($format, $member->birthdate)->format('d/m/Y');
         }
 
