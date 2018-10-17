@@ -14,6 +14,7 @@
                         <a href="{{ route('members.home') }}" class="btn btn-primary">Gérer les membres</a>
                     </div>
                 </div>
+                @hasrole('admin')
                 <div class="card">
                     <img class="card-img-top img-fluid" src="img/calendar.png" alt="Gestion des sorties">
                     <div class="card-body">
@@ -22,6 +23,7 @@
                         <a href="{{ route('members.home') }}" class="btn btn-primary">Gérer les sorties</a>
                     </div>
                 </div>
+                @endhasrole
             </div>
         </div>
     </div>

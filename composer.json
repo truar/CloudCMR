@@ -18,7 +18,8 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "5.7.*",
         "lecturize/laravel-addresses": "^0.1.1",
-        "nesbot/carbon": "^1.33"
+        "nesbot/carbon": "^1.33",
+        "spatie/laravel-permission": "^2.23"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
