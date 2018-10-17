@@ -16,6 +16,8 @@ class EventController extends Controller
      */
     public function __construct() {
         parent::__construct();
+
+        $this->middleware(['role:admin']);
     }
 
     public function index(Request $req) {

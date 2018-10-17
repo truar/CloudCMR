@@ -20,8 +20,13 @@ class EventTest extends TestCase
          */
         parent::setUp();
         $this->dbType = env('DB_CONNECTION', 'sqlite');
+        // We need to seed the database to be able to simulate that we are an admin
+        $this->artisan('db:seed', ['--class' => 'RolesAndPermissionsSeeder']);
+        $this->artisan('db:seed', ['--class' => 'UserAdminSeeder']);
+
         $this->requester = new Requester($this);
         $this->user = factory(User::class)->create();
+        $this->user->assignRole('admin');
         $this->event = factory(\CloudCMR\Event::class)->make();
         $this->transportation = factory(\CloudCMR\Transportation::class)->make();
         //$this->withoutExceptionHandling();
@@ -33,6 +38,14 @@ class EventTest extends TestCase
     public function test_it_cant_access_without_authorization() {
         $response = $this->get('/events');
         $response->assertStatus(302);
+    }
+
+    /**
+     * Fail to access members without authorization
+     */
+    public function test_it_cant_access_if_not_authorized() {
+        $response = $this->actingAs(factory(User::class)->create())->get('/events');
+        $response->assertStatus(403);
     }
 
     /**
