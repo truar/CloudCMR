@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use CloudCMR\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,8 +22,8 @@ class EventTest extends TestCase
         $this->dbType = env('DB_CONNECTION', 'sqlite');
         $this->requester = new Requester($this);
         $this->user = factory(User::class)->create();
-        $this->event = factory(\App\Event::class)->make();
-        $this->transportation = factory(\App\Transportation::class)->make();
+        $this->event = factory(\CloudCMR\Event::class)->make();
+        $this->transportation = factory(\CloudCMR\Transportation::class)->make();
         //$this->withoutExceptionHandling();
     }
     

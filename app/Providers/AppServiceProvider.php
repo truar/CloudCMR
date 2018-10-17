@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace CloudCMR\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

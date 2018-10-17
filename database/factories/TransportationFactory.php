@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\App\Transportation::class, function (Faker $faker) {
+$factory->define(\CloudCMR\Transportation::class, function (Faker $faker) {
     return [
         'type' => 'BUS',
         'departureDate' => $faker->datetime->format('Y-m-d H:i:s'),

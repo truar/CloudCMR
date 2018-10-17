@@ -15,20 +15,18 @@ Route::get('/', 'WelcomeController@index')->name('welcome');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('/events', 'EventController@index')->name('events.home');
-Route::post('/events/create', 'EventController@create')->name('events.create');
-Route::post('/events/update/{event}', 'EventController@update')->name('events.update');
-Route::get('/events/delete/{event}', 'EventController@delete')->name('events.delete');
+Route::prefix('/events')->name('events.')->group(function() {
+    Route::get('/', 'EventController@index')->name('home');
+    Route::post('/create', 'EventController@create')->name('create');
+    Route::post('/update/{event}', 'EventController@update')->name('update');
+    Route::get('/delete/{event}', 'EventController@delete')->name('delete');
+});
 
 Route::prefix('/members')->name('members.')->group(function() {
     Route::get('/', 'MemberController@index')->name('home');
     Route::post('/create', 'MemberController@create')->name('create');
-    
     Route::get('/edit/{member}', 'MemberController@edit')->name('edit');
     Route::post('/update/{member}', 'MemberController@update')->name('update');
-    
     Route::get('/delete/{member}', 'MemberController@delete')->name('delete');
 });
 

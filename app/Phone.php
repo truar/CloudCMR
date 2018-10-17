@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace CloudCMR;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +17,6 @@ class Phone extends Model
      * Get the member that owns the phone.
      */
     public function member() {
-        return $this->belongsTo('App\Member');
+        return $this->belongsTo('CloudCMR\Member');
     }
 }

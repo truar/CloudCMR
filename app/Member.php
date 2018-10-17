@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace CloudCMR;
 
 use Illuminate\Database\Eloquent\Model;
 use Lecturize\Addresses\Traits\HasAddresses;
@@ -21,7 +21,7 @@ class Member extends Model
      * Get the phones associated to the member
      */
     public function phones() {
-        return $this->hasMany('App\Phone');
+        return $this->hasMany('CloudCMR\Phone');
     }
 
     /**

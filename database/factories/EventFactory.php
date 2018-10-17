@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\App\Event::class, function (Faker $faker) {
+$factory->define(\CloudCMR\Event::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'startDate' => $faker->datetime->format('Y-m-d H:i:s'),

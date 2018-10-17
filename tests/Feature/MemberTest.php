@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use CloudCMR\User;
 use Tests\TestCase;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -51,8 +51,8 @@ class MemberTest extends TestCase
      * Post a new member with no errors 
      */
     public function test_it_can_post_a_new_member() {
-        $member = factory(\App\Member::class)->make();
-        $phones = factory(\App\Phone::class, 10)->make();
+        $member = factory(\CloudCMR\Member::class)->make();
+        $phones = factory(\CloudCMR\Phone::class, 10)->make();
 
         $response = $this->postNewMember($member, $phones)
                         ->assertStatus(302);
@@ -64,7 +64,7 @@ class MemberTest extends TestCase
     }
 
     public function test_it_can_post_a_new_member_with_dash_and_spaces_without_usca() {
-        $member = factory(\App\Member::class)->states('space-and-dash')->make();
+        $member = factory(\CloudCMR\Member::class)->states('space-and-dash')->make();
         unset($member->uscaNumber);
         $response = $this->postNewMember($member)
                         ->assertStatus(302);
@@ -76,7 +76,7 @@ class MemberTest extends TestCase
      * Post a new member with errors on each field
      */
     public function test_it_cant_post_an_existing_member() {
-        $member = factory(\App\Member::class)->make();
+        $member = factory(\CloudCMR\Member::class)->make();
         
         $this->postNewMember($member)
             ->assertStatus(302);
@@ -92,7 +92,7 @@ class MemberTest extends TestCase
     }
 
     public function test_it_cant_post_a_member_with_a_wrong_birthdate() {
-        $member = factory(\App\Member::class)->make();
+        $member = factory(\CloudCMR\Member::class)->make();
 
         $this->postNewMember($member, null, false)
             ->assertStatus(422);
@@ -102,8 +102,8 @@ class MemberTest extends TestCase
      * Update a new member
      */
     public function test_it_can_update_a_member() {
-        $member = factory(\App\Member::class)->create();
-        $phone = factory(\App\Phone::class)->make();
+        $member = factory(\CloudCMR\Member::class)->create();
+        $phone = factory(\CloudCMR\Phone::class)->make();
         $member->phones()->save($phone);
         
         $phone->number = '1-111-111-111';
@@ -121,7 +121,7 @@ class MemberTest extends TestCase
      * Errors when updating a new member
      */
     public function test_it_cant_update_a_member_with_en_empty_lastname() {
-        $member = factory(\App\Member::class)->create();
+        $member = factory(\CloudCMR\Member::class)->create();
 
         $member->lastname="";
 
@@ -135,7 +135,7 @@ class MemberTest extends TestCase
      * No error when we update an existing member on field others than lastname, firstname and birthdate
      */
     public function test_it_can_update_a_member_without_changing_the_unicity() {
-        $member = factory(\App\Member::class)->create();
+        $member = factory(\CloudCMR\Member::class)->create();
 
         $member->email="toto@mail.com";
 
@@ -146,14 +146,14 @@ class MemberTest extends TestCase
     }
 
     public function test_it_cant_update_a_member_that_not_exist() {
-        $member = factory(\App\Member::class)->make();
+        $member = factory(\CloudCMR\Member::class)->make();
         $this->postUpdateMember($member)
             ->assertStatus(404); 
         $this->assertDatabaseMissing('members', $member->attributesToArray());
     }
 
     public function test_it_can_get_the_edtest_it_member_view() {
-        $member = factory(\App\Member::class)->create();
+        $member = factory(\CloudCMR\Member::class)->create();
         $this->getEditRequest($member->id)
             ->assertStatus(200);
     }
@@ -169,8 +169,8 @@ class MemberTest extends TestCase
     }
 
     public function test_it_can_delete_a_member() {
-        $member = factory(\App\Member::class)->create();
-        $phone = factory(\App\Phone::class)->make();
+        $member = factory(\CloudCMR\Member::class)->create();
+        $phone = factory(\CloudCMR\Phone::class)->make();
         $member->phones()->save($phone);
         
         $this->getDeleteRequest($member->id)
@@ -195,7 +195,7 @@ class MemberTest extends TestCase
         // First, we need to seed the db for the country list
         $this->artisan("db:seed");
 
-        $member = factory(\App\Member::class)->make();
+        $member = factory(\CloudCMR\Member::class)->make();
         $addresses = [[
             'street'     => '1 rue du lycée',
             'city'       => 'Rumilly',
@@ -223,7 +223,7 @@ class MemberTest extends TestCase
         // First, we need to seed the db for the country list
         $this->artisan("db:seed");
 
-        $member = factory(\App\Member::class)->create();
+        $member = factory(\CloudCMR\Member::class)->create();
         $address = [
             'street'     => '1 rue du lycée',
             'city'       => 'Rumilly',

@@ -158,11 +158,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        CloudCMR\Providers\AppServiceProvider::class,
+        CloudCMR\Providers\AuthServiceProvider::class,
+        // CloudCMR\Providers\BroadcastServiceProvider::class,
+        CloudCMR\Providers\EventServiceProvider::class,
+        CloudCMR\Providers\RouteServiceProvider::class,
 
     ],
 
