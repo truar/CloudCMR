@@ -2,6 +2,17 @@
     <div class="text-center">
         <a class="btn btn-outline-primary" href="{{ route('members.home') }}" role="button">Ajouter un nouveau membre</a>
     </div>
+    <div class="card-body row no-gutters align-items-center">
+        <!--end of col-->
+        <div class="col">
+            <input class="form-control form-control-lg form-control-borderless" type="search" placeholder="Search members">
+        </div>
+        <!--end of col-->
+        <div class="col-auto">
+            <button class="btn btn-lg btn-success" type="submit">Search</button>
+        </div>
+        <!--end of col-->
+    </div>
     <table class="table table-hover" id='members-table'>
         <thead>
             <tr>

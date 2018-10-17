@@ -1,10 +1,5 @@
-@extends('layouts.app')
+@extends('members.layouts.membersLayout')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-            @include('members.table.membersTable')
-            @include('members.form.memberForm', ['route' => 'members.update'])
-    </div>
-</div>
+@section('membersForm')
+    @include('members.form.memberForm', ['route' => 'members.update'])
 @endsection

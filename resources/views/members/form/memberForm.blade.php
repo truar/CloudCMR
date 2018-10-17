@@ -1,4 +1,7 @@
 <div class="col-md-8">
+    <div class="text-center">
+        <h2>Informations sur le membre</h2>
+    </div>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
