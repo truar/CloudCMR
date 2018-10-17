@@ -43,6 +43,7 @@ class MemberController extends Controller {
     }
 
     public function edit(Member $member) {
+        $member->birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
         return view(self::MEMBERS_EDIT, [self::MEMBERS => Member::all(), self::MEMBER => $member]);
     }
 
@@ -56,12 +57,12 @@ class MemberController extends Controller {
         $member->flushAddresses();
         $member->saveAddresses($req->addresses);
 
-        return $this->redirectHome();
+        return redirect()->route(self::MEMBERS_EDIT, [$member]);
     }
 
     public function delete(Member $member) {
         // Delete the phones first.
-        // We don't want to rel on delete cascade as this can be different regarding the DB
+        // We don't want to del on delete cascade as this can be different regarding the DB
         $member->phones()->delete();
         $member->delete();
         return $this->redirectHome();

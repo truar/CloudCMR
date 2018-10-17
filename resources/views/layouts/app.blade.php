@@ -18,6 +18,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('external/fontawesome-free-5.4.1-web/css/all.css') }}">
+
 </head>
 <body>
     <div id="app">
@@ -33,7 +35,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        <a href="{{ route('welcome') }}"><i class="fas fa-columns"></i> Dashboard</a>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

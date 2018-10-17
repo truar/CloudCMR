@@ -21,7 +21,7 @@ class EventController extends Controller
     }
 
     public function index(Request $req) {
-        return view('welcome');
+        return view('dashboard');
     }
 
     public function create(CreateEventRequest $req) {
@@ -30,19 +30,19 @@ class EventController extends Controller
 
         $event->save();
         $event->saveTransportations();
-        return view('welcome');
+        return view('dashboard');
     }
 
     public function update(CreateEventRequest $req, Event $event) {
         $this->requestToEvent($req, $event);
         $event->save();
         $event->saveTransportations();
-        return view('welcome');
+        return view('dashboard');
     }
 
     public function delete(Event $event) {
         $event->delete();
-        return view('welcome');
+        return view('dashboard');
     }
 
     private function requestToEvent(Request $req, Event $event) {
