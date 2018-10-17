@@ -10,7 +10,6 @@ use App\Phone;
 
 class MemberController extends Controller {
     
-    const AUTH = 'auth';
     const MEMBERS_HOME = 'members.home';
     const MEMBERS_INDEX = 'members.index';
     const MEMBERS_EDIT = 'members.edit';
@@ -24,7 +23,7 @@ class MemberController extends Controller {
      * @return void
      */
     public function __construct() {
-        $this->middleware(self::AUTH);
+        parent::__construct();
     }
 
     public function index(Request $req) {

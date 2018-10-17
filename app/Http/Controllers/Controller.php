@@ -10,4 +10,13 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+     /**
+     * Every page in the application needs to have an authentified user.
+     * Except the Login
+     * @return void
+     */
+    public function __construct() {
+        $this->middleware('auth');
+    }
 }
