@@ -14,6 +14,7 @@
         "php": "^7.1.3",
         "fideloper/proxy": "^4.0",
         "gloudemans/ShoppingCart": "master",
+        "jeremykenedy/laravel-users": "^3.1",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "5.7.*",
@@ -35,7 +36,7 @@
             "database/factories"
         ],
         "psr-4": {
-            "CloudCMR\\": "app/"
+            "App\\": "app/"
         }
     },
     "autoload-dev": {

@@ -1,6 +1,6 @@
 <?php
 
-namespace CloudCMR;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,7 +17,7 @@ class Event extends Model
      * Get the transportations associated to the event
      */
     public function transportations() {
-        return $this->hasMany('CloudCMR\Transportation');
+        return $this->hasMany('App\Transportation');
     }
 
     /**

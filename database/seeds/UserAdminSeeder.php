@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use CloudCMR\User;
+use App\User;
 use Illuminate\Support\Facades\Hash;
 
 class UserAdminSeeder extends Seeder

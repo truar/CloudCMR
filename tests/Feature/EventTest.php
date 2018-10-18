@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use CloudCMR\User;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,8 +27,8 @@ class EventTest extends TestCase
         $this->requester = new Requester($this);
         $this->user = factory(User::class)->create();
         $this->user->assignRole('admin');
-        $this->event = factory(\CloudCMR\Event::class)->make();
-        $this->transportation = factory(\CloudCMR\Transportation::class)->make();
+        $this->event = factory(\App\Event::class)->make();
+        $this->transportation = factory(\App\Transportation::class)->make();
         //$this->withoutExceptionHandling();
     }
     

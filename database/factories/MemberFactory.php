@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\CloudCMR\Member::class, function (Faker $faker) {
+$factory->define(\App\Member::class, function (Faker $faker) {
     return [
         'lastname' => $faker->lastName,
         'firstname' => $faker->firstNameMale,
@@ -13,7 +13,7 @@ $factory->define(\CloudCMR\Member::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(CloudCMR\Member::class, 'space-and-dash', [
+$factory->state(App\Member::class, 'space-and-dash', [
     'lastname' => '"Pinchon Carron de la carrier"',
     'firstname' => 'Jean-Paul'
 ]);

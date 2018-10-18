@@ -1,6 +1,6 @@
 <?php
 
-namespace CloudCMR\Http\Requests;
+namespace App\Http\Requests;
 
 use Illuminate\Validation\Rule;
 

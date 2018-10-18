@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d616aeffeb8182dbe5310352ba108404",
+    "content-hash": "e6627b562c6fc847d503e852c42f6964",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -519,6 +519,62 @@
                 }
             ],
             "time": "2015-04-20T18:58:01+00:00"
+        },
+        {
+            "name": "jeremykenedy/laravel-users",
+            "version": "v3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jeremykenedy/laravel-users.git",
+                "reference": "7de0a89c99626b8bd5c286b7a4afcb4fe187d447"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jeremykenedy/laravel-users/zipball/7de0a89c99626b8bd5c286b7a4afcb4fe187d447",
+                "reference": "7de0a89c99626b8bd5c286b7a4afcb4fe187d447",
+                "shasum": ""
+            },
+            "require": {
+                "laravelcollective/html": "^5.4|^5.5|^5.6",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "illuminate/support": "^5.6",
+                "laravel/laravel": "dev-develop",
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "^7.0"
+            },
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "jeremykenedy\\laravelusers\\LaravelUsersServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "jeremykenedy\\laravelusers\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jeremykenedy",
+                    "email": "jeremykenedy@gmail.com"
+                }
+            ],
+            "description": "Laravel Users Management CRUD Package",
+            "keywords": [
+                "Users",
+                "crud",
+                "laravel",
+                "management"
+            ],
+            "time": "2018-09-06T05:06:00+00:00"
         },
         {
             "name": "laravel/framework",

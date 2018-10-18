@@ -1,11 +1,11 @@
 <?php
 
-namespace CloudCMR\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use CloudCMR\Http\Requests\CreateEventRequest;
-use CloudCMR\Event;
-use CloudCMR\Transportation;
+use App\Http\Requests\CreateEventRequest;
+use App\Event;
+use App\Transportation;
 
 class EventController extends Controller
 {

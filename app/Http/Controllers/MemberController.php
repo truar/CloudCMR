@@ -1,12 +1,12 @@
 <?php
 
-namespace CloudCMR\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use CloudCMR\Http\Requests\CreateMemberRequest;
-use CloudCMR\Member;
+use App\Http\Requests\CreateMemberRequest;
+use App\Member;
 use Carbon\Carbon;
-use CloudCMR\Phone;
+use App\Phone;
 
 class MemberController extends Controller {
     
