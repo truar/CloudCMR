@@ -9,11 +9,11 @@ return [
     */
 
     'nav' => [
-        'toggle-nav-alt'    => 'Toggle Navigation',
-        'login'             => 'Login',
-        'register'          => 'Register',
-        'users'             => 'Users',
-        'logout'            => 'Logout',
+        'toggle-nav-alt'    => 'Navigation',
+        'login'             => 'Connexion',
+        'register'          => 'Inscription',
+        'users'             => 'Utilisateurs',
+        'logout'            => 'Deconnexion',
     ],
 
 ];

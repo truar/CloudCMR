@@ -106,9 +106,9 @@
                                             @if(config('laravelusers.rolesEnabled'))
                                                 <td class="hidden-sm hidden-xs">
                                                     @foreach ($user->roles as $user_role)
-                                                        @if ($user_role->name == 'User')
+                                                        @if ($user_role->name == 'admin')
                                                             @php $badgeClass = 'primary' @endphp
-                                                        @elseif ($user_role->name == 'Admin')
+                                                        @elseif ($user_role->name == 'benevole')
                                                             @php $badgeClass = 'warning' @endphp
                                                         @elseif ($user_role->name == 'Unverified')
                                                             @php $badgeClass = 'danger' @endphp

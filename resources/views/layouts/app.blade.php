@@ -7,10 +7,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - @yield('title')</title>
+    <title>{{ config('app.name', 'Laravel') }} @yield('title')</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    @yield('scriptHead')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -20,6 +20,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('external/fontawesome-free-5.4.1-web/css/all.css') }}">
 
+    @yield('extraHead')
 </head>
 <body>
     <div id="app">
@@ -73,5 +74,8 @@
             @yield('content')
         </main>
     </div>
+
+    @yield('scripts')
+
 </body>
 </html>
