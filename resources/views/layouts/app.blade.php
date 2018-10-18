@@ -35,7 +35,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <a href="{{ route('welcome') }}"><i class="fas fa-columns"></i> Dashboard</a>
+                        @guest 
+                        @else
+                            <a href="{{ route('welcome') }}"><i class="fas fa-columns"></i> Dashboard</a>
+                        @endguest
                     </ul>
 
                     <!-- Right Side Of Navbar -->
