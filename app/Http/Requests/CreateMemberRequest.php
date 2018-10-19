@@ -20,7 +20,8 @@ class CreateMemberRequest extends Request {
             'firstname' => ['required', 'string'],
             'gender' => ['required', Rule::in(['male', 'female'])],
             'birthdate' => ['required', 'date_format:d/m/Y'],
-            'email' => ['required', 'email']
+            'email' => ['required', 'email'],
+            'phones.*.number' => ['required']
         ];
     }
 
@@ -63,7 +64,8 @@ class CreateMemberRequest extends Request {
             'birthdate.required' => 'La date de naissance est obligatoire',
             'birthdate.date_format' => 'Le format de la date de naissace est jj/mm/aaaa (ex: 25/05/1980 pour le 25 mai 1980)',
             'email.required' => 'L\'adresse email est obligatoire',
-            'email.email' => 'Veuillez rentrer un format d\'email valide'
+            'email.email' => 'Veuillez rentrer un format d\'email valide',
+            'phones.*.required' => 'Le numéro de téléphone est obligatoire'
         ];
     }
     

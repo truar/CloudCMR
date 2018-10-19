@@ -1,15 +1,15 @@
 <div class="col-md-4">
     <div class="text-center">
-        <a class="btn btn-outline-primary" href="{{ route('members.home') }}" role="button">Ajouter un nouveau membre</a>
+        <a class="btn btn-outline-primary" href="{{ route('members.home') }}" role="button"><i class="fa fa-fw fa-user-plus" aria-hidden="true"></i> Ajouter un nouveau membre</a>
     </div>
     <div class="card-body row no-gutters align-items-center">
         <!--end of col-->
         <div class="col">
-            <input class="form-control form-control-lg form-control-borderless" type="search" placeholder="Search members">
+            <input class="form-control form-control-lg form-control-borderless" type="Recherche" placeholder="Recherche...">
         </div>
         <!--end of col-->
         <div class="col-auto">
-            <button class="btn btn-lg btn-success" type="submit">Search</button>
+            <button class="btn btn-lg btn-success" type="submit">Recherche</button>
         </div>
         <!--end of col-->
     </div>
@@ -29,7 +29,7 @@
                     <td><a href="{{ route('members.edit', ['member' => $m]) }}"><i class="fas fa-pencil-alt"></i></a></td>
                 </tr>
             @empty
-                <p>No members</p>
+                <p>Aucun membre</p>
             @endforelse
             </tr>
         </tbody>
