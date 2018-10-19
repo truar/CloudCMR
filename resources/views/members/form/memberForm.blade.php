@@ -49,6 +49,16 @@
                 {{ Form::text('uscaNumber', $member->uscaNumber, ['class' => 'form-control']) }}
             </div>
         </div>
+        <hr/>
+        @foreach($member->phones as $phone)
+            <div class="form-group row">
+                {{ Form::label('phones[][number]', 'Numéro de téléphone', ['class' => 'col-sm-3 col-form-label']) }}
+                <div class="col-sm-8">
+                    {{ Form::text('phones[][number]', $phone->number, ['class' => 'form-control']) }}
+                </div>
+            </div>
+        @endforeach
+        
         <button type="submit" class="btn btn-primary">Enregistrer</button>
     {{ Form::close() }}
 </div>

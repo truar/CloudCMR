@@ -20,5 +20,15 @@ class Requester {
                          ->get($url, $reqParams);
     }
 
+    public function putRequest($actingAs, $url, $reqParams) {
+        return $this->testCase->actingAs($actingAs)
+                         ->put($url, $reqParams);
+    }
+
+    public function deleteRequest($actingAs, $url, $reqParams) {
+        return $this->testCase->actingAs($actingAs)
+                         ->delete($url, $reqParams);
+    }
+
 
 }

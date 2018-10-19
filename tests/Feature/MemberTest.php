@@ -191,7 +191,6 @@ class MemberTest extends TestCase
     }
 
     public function test_it_can_create_a_member_with_an_address() {
-        $this->withoutExceptionHandling();
         // First, we need to seed the db for the country list
         $this->artisan("db:seed");
 
@@ -237,7 +236,17 @@ class MemberTest extends TestCase
         $this->assertDatabaseHas('members', $member->attributesToArray());
         $this->assertDatabaseHas('addresses', $address);
     }
-    
+
+    public function test_it_cant_update_a_member_with_an_empty_phone_number() {
+        $member = factory(\App\Member::class)->create();
+        $phone = factory(\App\Phone::class)->make();
+        $phone->number = '';
+
+        $response = $this->postUpdateMember($member, [$phone])
+                        ->assertStatus(422);
+
+    }
+
     /**
      * Post the member in the url 
      */
