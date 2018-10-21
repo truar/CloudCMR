@@ -31,7 +31,7 @@ class MemberController extends Controller {
     }
 
     public function create(CreateMemberRequest $req) {        
-        
+    
         $member = new Member;
         $this->requestToMember($req, $member);
 

@@ -16,5 +16,7 @@ class MembersSeeder extends Seeder
         foreach($phones as $phone) {
             $member->phones()->save($phone);
         }
+        $addresses = factory(\Lecturize\Addresses\Models\Address::class, 3)->make();
+        $member->saveAddresses($addresses->toArray());
     }
 }
