@@ -21,6 +21,13 @@
     <link rel="stylesheet" href="{{ asset('external/fontawesome-free-5.4.1-web/css/all.css') }}">
 
     @yield('extraHead')
+
+    <script>
+        window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+        ]) !!};
+    </script>
+    
 </head>
 <body>
     <div id="app">
@@ -54,8 +61,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                       v-on:click.prevent="submitLogoutForm">
                                         {{ __('Logout') }}
                                     </a>
 

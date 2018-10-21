@@ -16,7 +16,33 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('phone-form-component', require('./components/PhoneFormComponent.vue'));
+
+//axios.defaults.headers.common['Authorization'] = Laravel.csrfToken;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    methods: {
+        submitLogoutForm: function() {
+            document.getElementById('logout-form').submit();
+        },
+        deletePhone: async function(url, event) {
+            try {
+                let data = await axios.delete(url);
+                // Remove the line from the DOM
+                $('#phone-' + data.data.data.id).remove();
+            } catch (error) {
+                alert(error);
+            }
+        },
+        addPhoneForm: function() {
+            $('<div id="new-phone"></div>').insertBefore('#add-phone-form');
+            new Vue({
+                el: '#new-phone',
+                component: 'phone-form-component',
+                template: '<phone-form-component/>'
+            })
+        }
+    }
 });
