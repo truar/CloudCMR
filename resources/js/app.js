@@ -17,12 +17,17 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('phone-form-component', require('./components/PhoneFormComponent.vue'));
+Vue.component('address-form-component', require('./components/AddressFormComponent.vue'));
 
 //axios.defaults.headers.common['Authorization'] = Laravel.csrfToken;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const app = new Vue({
     el: '#app',
+    data: {
+        addressCount: $('.address-form').length,
+        phoneCount: $('.phone-form').length
+    },
     methods: {
         submitLogoutForm: function() {
             document.getElementById('logout-form').submit();
@@ -32,16 +37,51 @@ const app = new Vue({
                 let data = await axios.delete(url);
                 // Remove the line from the DOM
                 $('#phone-' + data.data.data.id).remove();
+                this.phoneCount--;
             } catch (error) {
                 alert(error);
             }
         },
         addPhoneForm: function() {
+            this.phoneCount++;
             $('<div id="new-phone"></div>').insertBefore('#add-phone-form');
+            let vm = this;
             new Vue({
                 el: '#new-phone',
                 component: 'phone-form-component',
-                template: '<phone-form-component/>'
+                methods: {
+                    deletePhoneForm: function(phoneId) {
+                        $('#' + phoneId).remove();
+                        vm.phoneCount--;
+                    }
+                },
+                template: '<phone-form-component v-on:delete-phone-form=\'deletePhoneForm\' phone-key="' + this.phoneCount + '"/>'
+            });
+        },
+        deleteAddress: async function(url, event) {
+            try {
+                let data = await axios.delete(url);
+                // Remove the line from the DOM
+                $('#address-' + data.data.data.id).remove();
+                this.addressCount--;
+            } catch (error) {
+                alert(error);
+            }
+        },
+        addAddressForm: function() {
+            this.addressCount++;
+            $('<div id="new-address"></div>').insertBefore('#add-address-form');
+            let vm = this;
+            new Vue({
+                el: '#new-address',
+                component: 'address-form-component',
+                methods: {
+                    deleteAddressForm: function(addressId) {
+                        $('#' + addressId).remove();
+                        vm.addressCount--;
+                    },
+                },
+                template: '<address-form-component v-on:delete-address-form="deleteAddressForm" address-key="' + this.addressCount + '"/>'
             })
         }
     }

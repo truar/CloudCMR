@@ -1,20 +1,21 @@
 <template>
-    <div id="phone-form" class="form-group row">
+    <div :id="phoneId" class="form-group row phone-form">
         <label for="phones[][number]" class="col-sm-3 col-form-label">Numéro de téléphone</label> 
         <div class="col-sm-7">
             <input name="phones[][number]" type="text" value="" id="phones[][number]" class="form-control">
         </div>
         <div class="col-sm-1">
-            <a href="#" v-on:click.stop.prevent="deletePhoneForm"><i class="fas fa-times-circle"></i></a>
+            <a href="#" v-on:click.stop.prevent="$emit('delete-phone-form', phoneId)"><i class="fas fa-times-circle"></i></a>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        methods: {
-            deletePhoneForm: function() {
-                $('#phone-form').remove();
+        props: ['phoneKey'],
+        computed: {
+            phoneId: function() {
+                return `phone-form-${this.phoneKey}`;
             }
         }
     }
