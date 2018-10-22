@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Gestion des sorties</h5>
                     <p class="card-text">Administrer vos sorties (création, modification et suppression)</p>
-                    <a href="{{ route('members.home') }}" class="btn btn-primary">Gérer les sorties</a>
+                    <a href="#" class="btn btn-primary">Gérer les sorties</a>
                 </div>
             </div>
             <div class="card">
