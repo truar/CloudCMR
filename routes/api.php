@@ -22,5 +22,6 @@ Route::middleware('auth:api')->get('/user', 'ApiController@index');
 Route::prefix('/members/{member}/phones')->name('phones.')->group(function() {
     Route::put('/update/{phone}', 'Api\PhoneController@update')->name('update');
     Route::delete('/delete/{phone}', 'Api\PhoneController@delete')->name('delete');
-
 });
+
+Route::delete('/members/{member}/addresses/delete/{address}', 'Api\AddressController@delete')->name('addresses.delete');

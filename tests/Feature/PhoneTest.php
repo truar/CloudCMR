@@ -34,13 +34,12 @@ class PhoneTest extends TestCase
         //$this->withoutExceptionHandling();
     }
 
-    public function it_cant_update_when_no_authenticated() {
+    public function test_it_cant_update_when_no_authenticated() {
         $this->put(route('phones.update', ['member' => $this->member, 'phone' => 1]), [])
             ->assertStatus(302);
     }
 
     public function test_it_can_update_a_phone_number() {
-        $this->withoutExceptionHandling();
         $phone = $this->phone;
         $phone->number = '12345';
         $response = $this->requester->putRequest($this->user, route('phones.update', ['member' => $this->member, 'phone' => $phone]), $phone->toArray());

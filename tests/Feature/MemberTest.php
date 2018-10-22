@@ -192,7 +192,7 @@ class MemberTest extends TestCase
 
     public function test_it_can_create_a_member_with_an_address() {
         // First, we need to seed the db for the country list
-        $this->artisan("db:seed");
+        $this->artisan("db:seed", ['--class' => 'CountriesSeeder']);
 
         $member = factory(\App\Member::class)->make();
         $addresses = [[
@@ -220,7 +220,7 @@ class MemberTest extends TestCase
 
     public function test_it_can_update_a_member_with_a_new_address() {
         // First, we need to seed the db for the country list
-        $this->artisan("db:seed");
+        $this->artisan("db:seed", ['--class' => 'CountriesSeeder']);
 
         $member = factory(\App\Member::class)->create();
         $address = [
