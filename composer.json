@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": "^7.1.3",
+        "5dmatwebsearch/advancesearch": "dev-master",
         "fideloper/proxy": "^4.0",
         "gloudemans/ShoppingCart": "master",
         "jeremykenedy/laravel-users": "^3.1",

@@ -18,6 +18,7 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('phone-form-component', require('./components/PhoneFormComponent.vue'));
 Vue.component('address-form-component', require('./components/AddressFormComponent.vue'));
+Vue.component('member-table-component', require('./components/MemberTableComponent.vue'));
 
 //axios.defaults.headers.common['Authorization'] = Laravel.csrfToken;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -26,7 +27,7 @@ const app = new Vue({
     el: '#app',
     data: {
         addressCount: $('.address-form').length,
-        phoneCount: $('.phone-form').length
+        phoneCount: $('.phone-form').length,
     },
     methods: {
         submitLogoutForm: function() {
@@ -83,6 +84,24 @@ const app = new Vue({
                 },
                 template: '<address-form-component v-on:delete-address-form="deleteAddressForm" address-key="' + this.addressCount + '"/>'
             })
+        },
+        searchMembers: async function(url, event) {
+            let searchText = {searchText: $('#searchText').val()};
+            let vm = this;
+            try {
+                let data = await axios.post(url, searchText);
+                vm.members = data.data.data;
+                new Vue({
+                    el: '#members-table',
+                    data: {
+                        members: vm.members
+                    },
+                    component: 'member-table-component',
+                    template: '<member-table-component v-bind:members="members"></member-table-component>'
+                })
+            } catch(error) {
+                console.log(error);
+            }
         }
     }
 });

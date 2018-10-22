@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateMemberRequest;
+use App\Http\Requests\SearchMembersRequest;
 use App\Member;
 use Carbon\Carbon;
 use App\Phone;
@@ -27,7 +28,7 @@ class MemberController extends Controller {
     }
 
     public function index(Request $req) {
-        return view(self::MEMBERS_INDEX, [self::MEMBERS => Member::all(), self::MEMBER => new Member]);
+        return view(self::MEMBERS_INDEX, [self::MEMBERS => $this->getMembers(), self::MEMBER => new Member]);
     }
 
     public function create(CreateMemberRequest $req) {        
@@ -44,7 +45,7 @@ class MemberController extends Controller {
 
     public function edit(Member $member) {
         $member->birthdate = Carbon::createFromFormat('Y-m-d', $member->birthdate)->format('d/m/Y');
-        return view(self::MEMBERS_EDIT, [self::MEMBERS => Member::all(), self::MEMBER => $member]);
+        return view(self::MEMBERS_EDIT, [self::MEMBERS => $this->getMembers(), self::MEMBER => $member]);
     }
 
     public function update(CreateMemberRequest $req, Member $member) {
@@ -68,6 +69,18 @@ class MemberController extends Controller {
         return $this->redirectHome();
     }
 
+    public function search(SearchMembersRequest $request) {
+        $searchText = '%' . $request->searchText . '%';
+        $members = Member::where('lastname', 'like', $searchText)
+            ->orWhere('firstname', 'like',  $searchText)->orderBy('lastname', 'asc', 'firstname', 'asc')->get();
+
+        $jsonResponse = $members->toArray();
+        foreach($members as $key=>$member) {
+            $jsonResponse[$key]['edit_url'] = route('members.edit', ['member' => $member]);
+        }
+        return response()->json(['data' => $jsonResponse], 200);
+    }
+
     protected function requestToMember($req, $member) {
         $member->lastname = $req->lastname;
         $member->firstname = $req->firstname;
@@ -89,6 +102,10 @@ class MemberController extends Controller {
 
     protected function redirectHome() {
         return redirect()->route(self::MEMBERS_HOME);
+    }
+
+    protected function getMembers() {
+        return Member::orderBy('lastname', 'asc', 'firstname', 'desc')->get();
     }
 
 }

@@ -92,7 +92,9 @@
         <button class='btn btn-success' id='add-address-form' type='button' v-on:click="addAddressForm"><i class="fas fa-plus-circle"></i> Ajouter une adresse</button>
 
         <div class="form-group row">
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <div class="col-sm-10" style="margin-top: 10px;">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>  
         </div>
     {{ Form::close() }}
 </div>

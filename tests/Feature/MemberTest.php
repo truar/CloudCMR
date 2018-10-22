@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Http\JsonResponse;
 
 class MemberTest extends TestCase
 {
@@ -22,7 +23,9 @@ class MemberTest extends TestCase
          */
         parent::setUp();
         $this->dbType = env('DB_CONNECTION', 'sqlite');
-        //$this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
+
+        $this->user = factory(User::class)->create();
     }
 
     /**
@@ -244,6 +247,205 @@ class MemberTest extends TestCase
 
         $response = $this->postUpdateMember($member, [$phone])
                         ->assertStatus(422);
+
+    }
+
+    public function test_it_can_search_a_member_contains_the_same_last_name() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->lastname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'RUARO'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+        
+        $jsonExpected = $members->toArray();
+        $jsonExpected[0]['edit_url'] = route('members.edit', ['member' => $members[0]]);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $jsonExpected]);
+    }
+
+    public function test_it_can_search_a_member_contains_the_same_first_name() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->firstname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'RUARO'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+        
+        $jsonExpected = $members->toArray();
+        $jsonExpected[0]['edit_url'] = route('members.edit', ['member' => $members[0]]);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $jsonExpected]);
+    }
+
+    public function test_it_can_search_a_member_doesnt_contain_the_same_first_name() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->firstname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'THIBAULT'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+        
+        $response->assertStatus(200)
+            ->assertJson(['data' => []]);
+    }
+
+    public function test_it_can_search_a_member_doesnt_contain_the_same_last_name() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->lastname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'THIBAULT'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+        
+        $response->assertStatus(200)
+            ->assertJson(['data' => []]);
+    }
+
+    public function test_it_can_search_a_member_contains_partially_the_first_name_at_the_beginning() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->firstname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'RU'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+    
+        $jsonExpected = $members->toArray();
+        $jsonExpected[0]['edit_url'] = route('members.edit', ['member' => $members[0]]);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $jsonExpected]);
+    }
+
+    public function test_it_can_search_a_member_contains_partially_the_first_name_in_the_middle() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->firstname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'UAR'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+        
+        $jsonExpected = $members->toArray();
+        $jsonExpected[0]['edit_url'] = route('members.edit', ['member' => $members[0]]);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $jsonExpected]);
+    }
+
+    public function test_it_can_search_a_member_contains_partially_the_first_name_at_the_end() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->firstname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'RO'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+        
+        $jsonExpected = $members->toArray();
+        $jsonExpected[0]['edit_url'] = route('members.edit', ['member' => $members[0]]);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $jsonExpected]);
+    }
+
+    public function test_it_can_search_a_member_contains_partially_the_last_name_at_the_beginning() {
+        $this->withoutExceptionHandling();
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->lastname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'RU'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+        
+        $jsonExpected = $members->toArray();
+        $jsonExpected[0]['edit_url'] = route('members.edit', ['member' => $members[0]]);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $jsonExpected]);
+    }
+
+    public function test_it_can_search_a_member_contains_partially_the_last_name_in_the_middle() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->lastname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'UAR'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+        
+        $jsonExpected = $members->toArray();
+        $jsonExpected[0]['edit_url'] = route('members.edit', ['member' => $members[0]]);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $jsonExpected]);
+    }
+
+    public function test_it_can_search_a_member_contains_partially_the_last_name_at_the_end() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->lastname = 'RUARO';
+        $members[0]->save();
+
+        $searchText = ['searchText' => 'RO'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+        
+        $jsonExpected = $members->toArray();
+        $jsonExpected[0]['edit_url'] = route('members.edit', ['member' => $members[0]]);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $jsonExpected]);
+    }
+
+    public function test_it_cant_search_a_member_without_search_text() {
+        $members = factory(\App\Member::class, 1)->make();
+        $members[0]->lastname = 'RUARO';
+        $members[0]->save();
+
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), []);
+        
+        $response->assertStatus(JsonResponse::HTTP_BAD_REQUEST);
+    }
+
+    public function test_it_can_search_members_order_by_lastname_firstname() {
+        $members = factory(\App\Member::class, 4)->make();
+        $index = 0;
+        $members[$index]->lastname = 'DEAF';
+        $members[$index]->firstname = 'DEF';
+        $members[$index++]->save();
+        $members[$index]->lastname = 'DEAF';
+        $members[$index]->firstname = 'CDE';
+        $members[$index++]->save();
+        $members[$index]->lastname = 'ABC';
+        $members[$index]->firstname = 'EFG';
+        $members[$index++]->save();
+        $members[$index]->lastname = 'ABC';
+        $members[$index]->firstname = 'ABC';
+        $members[$index++]->save();
+
+        $jsonExpected = [$members[3]->toArray(), $members[2]->toArray(), $members[1]->toArray(), $members[0]->toArray()];
+        $index = 0;
+        $jsonExpected[$index++]['edit_url'] = route('members.edit', ['member' => $members[3]]);
+        $jsonExpected[$index++]['edit_url'] = route('members.edit', ['member' => $members[2]]);
+        $jsonExpected[$index++]['edit_url'] = route('members.edit', ['member' => $members[1]]);
+        $jsonExpected[$index++]['edit_url'] = route('members.edit', ['member' => $members[0]]);
+
+        $searchText = ['searchText' => 'A'];
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('members.search'), $searchText);
+
+        $response->assertStatus(200)
+            ->assertJson(['data' => $jsonExpected]);
+
 
     }
 

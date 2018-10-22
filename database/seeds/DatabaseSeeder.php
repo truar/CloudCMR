@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Seeded the permissions and roles!'); 
         $this->call(UserAdminSeeder::class);
         $this->command->info('Seeded the users!'); 
-        $this->call(MembersSeeder::class);
-        $this->command->info('Seeded the members!'); 
+        if (App::environment() != 'production') {
+            $this->call(MembersSeeder::class);
+            $this->command->info('Seeded the members!'); 
+        }
     }
 }

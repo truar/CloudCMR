@@ -152,8 +152,7 @@ return [
          */
         Gloudemans\ShoppingCart\ShoppingCartServiceProvider::class,
         Lecturize\Addresses\AddressesServiceProvider::class,
-        Webpatser\Countries\CountriesServiceProvider::class,
-        
+        Webpatser\Countries\CountriesServiceProvider::class,        
 
         /*
          * Application Service Providers...
@@ -214,7 +213,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
         'Countries' => Webpatser\Countries\CountriesFacade::class,
-
     ],
 
 ];

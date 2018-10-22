@@ -28,6 +28,7 @@ Route::prefix('/members')->name('members.')->group(function() {
     Route::get('/edit/{member}', 'MemberController@edit')->name('edit');
     Route::post('/update/{member}', 'MemberController@update')->name('update');
     Route::get('/delete/{member}', 'MemberController@delete')->name('delete');
+    Route::post('/search', 'MemberController@search')->name('search');
 });
 
 
